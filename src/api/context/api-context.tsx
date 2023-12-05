@@ -10,7 +10,7 @@ type APIData = {
     derivAPI: DerivAPI;
 };
 
-const APIDataContext = createContext<APIData | null>(null);
+export const APIDataContext = createContext<APIData | null>(null);
 
 const APIProvider = ({ children }: PropsWithChildren) => {
     const derivAPI = useRef<DerivAPI>(new DerivAPI({ connection: new WebSocket(getWebsocketURL()) }));
