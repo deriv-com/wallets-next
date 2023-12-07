@@ -1,7 +1,8 @@
-import { createContext, PropsWithChildren, useRef } from "react";
+import { createContext, PropsWithChildren, useEffect, useRef } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { Observable, Subscription } from "rxjs";
 // @ts-expect-error Deriv API is not typed
-import DerivAPI from "@deriv/deriv-api/dist/DerivAPI";
+import DerivAPI from "@deriv/deriv-api/dist/DerivAPIBasic";
 import { getWebsocketURL } from "../../utils/websocket.utils";
 import {
     TSocketEndpointNames,
@@ -9,7 +10,6 @@ import {
     TSocketResponseData,
     TSocketSubscribableEndpointNames,
 } from "../types/api.types";
-import { Observable, Subscription } from "rxjs";
 
 const queryClient = new QueryClient();
 
@@ -44,8 +44,11 @@ const APIProvider = ({ children }: PropsWithChildren) => {
 
     const subscribe: TSubscribeFunction = (name, payload) => {
         const id = "";
-        const subscription = derivAPI.current?.subscribe({ [name]: 1, subscribe: 1, ...(payload || {}) });
+        const matchingSubscription = subscriptions.current?.[id];
+        if (matchingSubscription) return { id, subscription: matchingSubscription };
 
+        const subscription = derivAPI.current?.subscribe({ [name]: 1, subscribe: 1, ...(payload || {}) });
+        subscriptions.current = { ...(subscriptions.current || {}), ...{ [id]: subscription } };
         return { id, subscription };
     };
 
@@ -53,6 +56,14 @@ const APIProvider = ({ children }: PropsWithChildren) => {
         const matchingSubscription = subscriptions.current?.[id];
         if (matchingSubscription) matchingSubscription.unsubscribe();
     };
+
+    useEffect(() => {
+        const currentDerivApi = derivAPI.current;
+
+        return () => {
+            if (currentDerivApi) currentDerivApi.disconnect();
+        };
+    }, []);
 
     return (
         <APIDataContext.Provider value={{ derivAPI: derivAPI.current, send, subscribe, unsubscribe }}>

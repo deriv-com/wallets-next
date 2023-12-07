@@ -28,6 +28,7 @@ export const getAppId = () => {
     const currentDomain = window.location.hostname;
     const domainAppId = ServerContants.domainAppId[currentDomain as keyof typeof ServerContants.domainAppId];
     if (domainAppId) return domainAppId;
+    return 36300;
 };
 
 export const getWebsocketURL = () => {
