@@ -2339,16 +2339,12 @@ export type TSocketPaginatateableRequestCleaned<T extends TSocketPaginateableEnd
 export type TSocketRequestPayload<
     T extends TSocketEndpointNames | TSocketPaginateableEndpointNames = TSocketEndpointNames
 > = Partial<TSocketRequestCleaned<T>> extends TSocketRequestCleaned<T>
-    ? {
-          payload?: T extends TSocketPaginateableEndpointNames
-              ? TSocketPaginatateableRequestCleaned<T>
-              : TSocketRequestCleaned<T>;
-      }
-    : {
-          payload: T extends TSocketPaginateableEndpointNames
-              ? TSocketPaginatateableRequestCleaned<T>
-              : TSocketRequestCleaned<T>;
-      };
+    ? T extends TSocketPaginateableEndpointNames
+        ? TSocketPaginatateableRequestCleaned<T>
+        : TSocketRequestCleaned<T>
+    : T extends TSocketPaginateableEndpointNames
+    ? TSocketPaginatateableRequestCleaned<T>
+    : TSocketRequestCleaned<T>;
 
 export type TSocketPaginateableEndpointNames = KeysMatching<
     TSocketEndpoints,
