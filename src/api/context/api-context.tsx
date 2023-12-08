@@ -6,6 +6,7 @@ import DerivAPI from "@deriv/deriv-api/dist/DerivAPIBasic";
 import { getWebsocketURL } from "../../utils/websocket.utils";
 import {
     TSocketEndpointNames,
+    TSocketError,
     TSocketRequestPayload,
     TSocketResponseData,
     TSocketSubscribableEndpointNames,
@@ -17,12 +18,12 @@ const queryClient = new QueryClient();
 type TSendFunction = <T extends TSocketEndpointNames>(
     name: T,
     payload?: TSocketRequestPayload<T>
-) => Promise<TSocketResponseData<T>>;
+) => Promise<TSocketResponseData<T> & TSocketError<T>>;
 
 type TSubscribeFunction = <T extends TSocketSubscribableEndpointNames>(
     name: T,
     payload?: TSocketRequestPayload<T>
-) => Promise<{ id: string; subscription: Observable<TSocketResponseData<T>> }>;
+) => Promise<{ id: string; subscription: Observable<TSocketResponseData<T> & TSocketError<T>> }>;
 
 type TUnsubscribeFunction = (id: string) => void;
 
@@ -60,8 +61,14 @@ const APIProvider = ({ children }: PropsWithChildren) => {
 
     useEffect(() => {
         const currentDerivApi = derivAPI.current;
+        const currentSubscriptions = subscriptions.current;
 
         return () => {
+            if (currentSubscriptions) {
+                Object.keys(currentSubscriptions).forEach((key) => {
+                    currentSubscriptions[key].unsubscribe();
+                });
+            }
             if (currentDerivApi) currentDerivApi.disconnect();
         };
     }, []);
