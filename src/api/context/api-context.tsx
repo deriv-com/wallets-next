@@ -10,6 +10,7 @@ import {
     TSocketResponseData,
     TSocketSubscribableEndpointNames,
 } from "../types/api.types";
+import { CryptoUtils } from "../../utils";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,7 @@ type TSendFunction = <T extends TSocketEndpointNames>(
 type TSubscribeFunction = <T extends TSocketSubscribableEndpointNames>(
     name: T,
     payload?: TSocketRequestPayload<T>
-) => { id: string; subscription: Observable<TSocketResponseData<T>> };
+) => Promise<{ id: string; subscription: Observable<TSocketResponseData<T>> }>;
 
 type TUnsubscribeFunction = (id: string) => void;
 
@@ -42,8 +43,8 @@ const APIProvider = ({ children }: PropsWithChildren) => {
         return derivAPI.current?.send({ [name]: 1, ...payload });
     };
 
-    const subscribe: TSubscribeFunction = (name, payload) => {
-        const id = "";
+    const subscribe: TSubscribeFunction = async (name, payload) => {
+        const id = await CryptoUtils.hashObject({ name, payload });
         const matchingSubscription = subscriptions.current?.[id];
         if (matchingSubscription) return { id, subscription: matchingSubscription };
 
