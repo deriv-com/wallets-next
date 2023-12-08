@@ -4,8 +4,6 @@ This repository contains the standalone package for the Deriv Wallets project. T
 
 ## Overview
 
-The Deriv Wallets project focuses on creating a comprehensive and secure wallet solution for various cryptocurrencies and digital assets. This standalone package specifically encapsulates the wallet-related features, including but not limited to:
-
 ## Getting Started
 
 To utilize the Wallets standalone package, follow these steps:
@@ -31,7 +29,7 @@ We welcome contributions! Fork the repository, make changes, and create a pull r
 
 ## Documentation
 
-Comprehensive documentation for integrating and using the Wallets standalone package can be found within the repository. Please refer to the documentation for detailed information on APIs, usage guidelines, and best practices.
+Comprehensive documentation for integrating and using the Wallets standalone package can be found within the repository.
 
 ## Issues and Support
 
