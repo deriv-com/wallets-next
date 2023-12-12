@@ -2282,6 +2282,8 @@ type TSocketEndpoints = {
 
 export type TSocketEndpointNames = keyof TSocketEndpoints;
 
+export type TSocketMultiSubscribableEndpointNames = Extract<TSocketEndpointNames, "exchange_rates">;
+
 export type TSocketSubscribableEndpointNames =
     | KeysMatching<TSocketEndpoints, { request: { subscribe?: number } }>
     | "exchange_rates";
