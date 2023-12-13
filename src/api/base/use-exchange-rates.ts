@@ -6,11 +6,11 @@ type TCurrencyPayload = NonNullable<TSocketRequestPayload<"exchange_rates">["tar
 type TCurrencyRateData = NonNullable<TSocketResponseData<"exchange_rates">["exchange_rates"]>["rates"];
 
 const useExchangeRates = <T extends TCurrencyPayload>() => {
-    const { subscribe: _subscribe } = useDerivAPI();
+    const { subscribe: _subscribe, unsubscribe: _unsubscribe } = useDerivAPI();
     const exchangeRatesSubscriptions = useRef<string[]>([]);
     const [data, setData] = useState<Record<TCurrencyPayload, TCurrencyRateData>>();
 
-    const subscribe = async (base_currency: T, target_currencies: T[]) => {
+    const subscribe = async ({ base_currency, target_currencies }: { base_currency: T; target_currencies: T[] }) => {
         target_currencies.forEach(async (c) => {
             const { id, subscription } = await _subscribe("exchange_rates", { base_currency, target_currency: c });
             exchangeRatesSubscriptions.current.push(id);
@@ -30,7 +30,9 @@ const useExchangeRates = <T extends TCurrencyPayload>() => {
         });
     };
 
-    const unsubscribe = () => {};
+    const unsubscribe = () => {
+        exchangeRatesSubscriptions.current.forEach((s) => _unsubscribe(s));
+    };
 
     return { data, subscribe, unsubscribe };
 };

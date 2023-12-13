@@ -12,9 +12,9 @@ const App = () => {
     useEffect(() => {
         subscribe1({ ticks: "R_50" });
         subscribe2({ ticks: "cryBTCUSD" });
-        multiSubscribe("USD", ["BTC", "ETH"]);
-        multiSubscribe("GBP", ["BTC", "ETH"]);
-        multiSubscribe("BTC", ["GBP", "ETH"]);
+        multiSubscribe({ base_currency: "USD", target_currencies: ["BTC", "ETH"] });
+        multiSubscribe({ base_currency: "GBP", target_currencies: ["BTC", "ETH"] });
+        multiSubscribe({ base_currency: "BTC", target_currencies: ["GBP", "ETH"] });
     }, [multiSubscribe, subscribe1, subscribe2]);
 
     return (
