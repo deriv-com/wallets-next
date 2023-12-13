@@ -9,7 +9,21 @@ import useDerivAPI from "./use-deriv-api";
 
 type TSubscriptionStatus = "idle" | "error" | "active" | "loading";
 
-export const useSubscription = <T extends TSocketSubscribableEndpointNames>(name: T) => {
+/**
+ * A hook to subscribe a single data stream to a specific endpoint.
+ * @param {TSocketSubscribableEndpointNames} name - The name of the subscribable endpoint.
+ * @returns {{
+ *   error: TSocketError<T> | undefined,
+ *   data: TSocketResponseData<T> | undefined,
+ *   subscribe: (payload: TSocketRequestPayload<T>) => Promise<void>,
+ *   unsubscribe: () => void,
+ *   isLoading: boolean,
+ *   isIdle: boolean,
+ *   isActive: boolean,
+ *   isError: boolean,
+ * }} An object containing the subscription-related state and functions.
+ */
+export const useSingleSubscription = <T extends TSocketSubscribableEndpointNames>(name: T) => {
     const [data, setData] = useState<TSocketResponseData<T>>();
     const [error, setError] = useState<TSocketError<T>>();
     const { subscribe: _subscribe, unsubscribe: _unsubscribe } = useDerivAPI();
@@ -46,4 +60,4 @@ export const useSubscription = <T extends TSocketSubscribableEndpointNames>(name
     } as const;
 };
 
-export default useSubscription;
+export default useSingleSubscription;

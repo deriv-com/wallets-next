@@ -69,7 +69,7 @@ const APIProvider = ({ children }: PropsWithChildren) => {
                     currentSubscriptions[key].unsubscribe();
                 });
             }
-            if (currentDerivApi) currentDerivApi.disconnect();
+            if (currentDerivApi && currentDerivApi.connection.readyState === 1) currentDerivApi.disconnect();
         };
     }, []);
 

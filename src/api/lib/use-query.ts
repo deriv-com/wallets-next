@@ -13,6 +13,7 @@ type TSocketRequestQuery<T extends TSocketEndpointNames> = Omit<
 
 const useQuery = <T extends TSocketEndpointNames>({ name, payload, queryKey, ...rest }: TSocketRequestQuery<T>) => {
     const { send } = useDerivAPI();
+
     return _useQuery<TSocketResponseData<T>, TSocketError<T>>({
         queryKey: [name, ...(queryKey ?? [])],
         queryFn: () => send(name, payload),
