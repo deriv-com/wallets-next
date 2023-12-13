@@ -23,7 +23,7 @@ type TSubscriptionStatus = "idle" | "error" | "active" | "loading";
  *   isError: boolean,
  * }} An object containing the subscription-related state and functions.
  */
-export const useSingleSubscription = <T extends TSocketSubscribableEndpointNames>(name: T) => {
+export const useSubscription = <T extends TSocketSubscribableEndpointNames>(name: T) => {
     const [data, setData] = useState<TSocketResponseData<T>>();
     const [error, setError] = useState<TSocketError<T>>();
     const { subscribe: _subscribe, unsubscribe: _unsubscribe } = useDerivAPI();
@@ -60,4 +60,4 @@ export const useSingleSubscription = <T extends TSocketSubscribableEndpointNames
     } as const;
 };
 
-export default useSingleSubscription;
+export default useSubscription;
