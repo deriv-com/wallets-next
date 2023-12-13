@@ -1,13 +1,17 @@
 import { useEffect } from "react";
-import useSingleSubscription from "../api/lib/use-single-subscription";
+import useSubscription from "../api/lib/use-subscription";
 import useExchangeRates from "../api/base/use-exchange-rates";
 
 const App = () => {
-    const { isLoading: isR50Loading, data: data1, subscribe: subscribe1 } = useSingleSubscription("ticks");
-    const { isLoading: isBTCLoading, data: data2, subscribe: subscribe2 } = useSingleSubscription("ticks");
+    const { isLoading: isR50Loading, data: data1, subscribe: subscribe1 } = useSubscription("ticks");
+    const { isLoading: isBTCLoading, data: data2, subscribe: subscribe2 } = useSubscription("ticks");
     const isLoading = isR50Loading || isBTCLoading;
 
-    const { data, subscribe: multiSubscribe } = useExchangeRates();
+    const { data, subscribe: multiSubscribe, unsubscribe } = useExchangeRates();
+
+    const unsubscribeHandler = () => {
+        unsubscribe({ base_currency: "BTC", target_currencies: ["GBP", "ETH"] });
+    };
 
     useEffect(() => {
         subscribe1({ ticks: "R_50" });
@@ -19,6 +23,7 @@ const App = () => {
 
     return (
         <div>
+            <button onClick={unsubscribeHandler}>Unsubscribe</button>
             {isLoading ? (
                 "Loading"
             ) : (
