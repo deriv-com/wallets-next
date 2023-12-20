@@ -31,6 +31,7 @@ const useExchangeRates = <T extends TCurrencyPayload>() => {
                     }
                 });
             }
+            return { id, subscription };
         });
     };
 
