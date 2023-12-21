@@ -1,10 +1,10 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { LocalStorageUtils } from "../../utils";
-import { AccountInfo, getLoginInfoFromURL } from "../../utils/url.utils";
+import { LocalStorageUtils, URLUtils } from "../../utils";
 
 type AuthData = {
     activeLoginid: string;
-    handleSetActiveLoginid: (loginid: string) => void;
+    switchAccount: (loginid: string) => void;
+    getActiveAccount: () => URLUtils.AccountInfo | null | undefined;
 };
 
 export const AuthContext = createContext<AuthData | null>(null);
@@ -15,30 +15,34 @@ type AuthProviderProps = {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [activeLoginid, setActiveLoginid] = useState(LocalStorageUtils.getValue("client.active_loginid") ?? "");
-    const [accountList, setAccountList] = useState<AccountInfo[] | null | undefined>(
-        LocalStorageUtils.getValue<AccountInfo[]>("client.account_list")
+    const [accountList, setAccountList] = useState<URLUtils.AccountInfo[] | null>(
+        LocalStorageUtils.getValue<URLUtils.AccountInfo[]>("client.account_list")
     );
 
-    const handleSetActiveLoginid = (loginid: string) => setActiveLoginid(loginid);
+    const switchAccount = (loginid: string) => {
+        if (loginid !== activeLoginid) {
+            setActiveLoginid(loginid);
+        }
+    };
+
+    const getActiveAccount = () => {
+        return accountList?.find((a) => a.loginid === activeLoginid);
+    };
 
     useEffect(() => {
-        const loginInfo = getLoginInfoFromURL();
-        if (loginInfo) {
+        const { loginInfo, paramsToDelete } = URLUtils.getLoginInfoFromURL();
+        if (loginInfo?.length) {
             setAccountList(loginInfo);
+            LocalStorageUtils.setValue("client.account_list", loginInfo);
+            URLUtils.filterSearchParams(paramsToDelete);
         }
-        if (!activeLoginid || activeLoginid === "undefined") {
-            const virtualAccount = loginInfo?.find((a) => /VRTC/.test(a.loginid));
-            const selectedAccount = virtualAccount?.loginid || loginInfo[0].loginid || "";
-            setActiveLoginid(selectedAccount);
-            LocalStorageUtils.setValue("client.active_loginid", selectedAccount);
-        }
-    }, [activeLoginid]);
+    }, []);
 
-    useEffect(() => {
-        LocalStorageUtils.setValue("client.account_list", accountList);
-    }, [accountList]);
-
-    return <AuthContext.Provider value={{ activeLoginid, handleSetActiveLoginid }}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{ activeLoginid, switchAccount, getActiveAccount }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export default AuthProvider;

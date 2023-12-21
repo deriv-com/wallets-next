@@ -4,9 +4,10 @@ type TLocalStorageKeys = (typeof LocalStorageConstants)[keyof typeof LocalStorag
 
 export const getValue = <T>(key: TLocalStorageKeys) => {
     const value = localStorage.getItem(key);
-    if (value === null) return null;
+    if (!value || value === "null" || value === "undefined") return null;
+
     try {
-        JSON.parse(value) as T;
+        return JSON.parse(value) as T;
     } catch (e) {
         return null;
     }
