@@ -28,6 +28,7 @@ export const getAppId = () => {
     const currentDomain = window.location.hostname;
     const domainAppId = ServerContants.domainAppId[currentDomain as keyof typeof ServerContants.domainAppId];
     if (domainAppId) return domainAppId;
+
     return 36300;
 };
 
@@ -38,4 +39,8 @@ export const getWebsocketURL = () => {
     const brand = "deriv";
 
     return `wss://${serverURL}/websockets/v3?app_id=${appId}&l=${language}&brand=${brand}`;
+};
+
+export const getOauthURL = () => {
+    return `https://oauth.deriv.com/oauth2/authorize?app_id=${getAppId()}&l=EN&brand=deriv`;
 };
