@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import useSubscription from "../api/lib/use-subscription";
-import useExchangeRates from "../api/base/use-exchange-rates";
-import { getOauthURL } from "../utils/websocket.utils";
+import useExchangeRates from "../../api/base/use-exchange-rates";
+import useSubscription from "../../api/lib/use-subscription";
+import { getOauthURL } from "../../utils/websocket.utils";
 
-const App = () => {
+const WalletsIndexPage = () => {
     const { isLoading: isR50Loading, data: data1, subscribe: subscribe1 } = useSubscription("ticks");
     const { isLoading: isBTCLoading, data: data2, subscribe: subscribe2 } = useSubscription("ticks");
     const isLoading = isR50Loading || isBTCLoading;
@@ -39,4 +39,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default WalletsIndexPage;
