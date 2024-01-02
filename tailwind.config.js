@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/** This is a script run during build in node environment */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     mode: "jit",
