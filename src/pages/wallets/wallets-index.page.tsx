@@ -2,13 +2,15 @@ import { useEffect } from "react";
 import useExchangeRates from "../../api/base/use-exchange-rates";
 import useSubscription from "../../api/lib/use-subscription";
 import { getOauthURL } from "../../utils/websocket.utils";
+import useAuthorize from "../../api/base/use-authorize";
 
 const WalletsIndexPage = () => {
+    const { data: authorizeData } = useAuthorize();
     const { isLoading: isR50Loading, data: data1, subscribe: subscribe1 } = useSubscription("ticks");
     const { isLoading: isBTCLoading, data: data2, subscribe: subscribe2 } = useSubscription("ticks");
     const isLoading = isR50Loading || isBTCLoading;
 
-    const { data, subscribe: multiSubscribe, unsubscribe } = useExchangeRates();
+    const { data: exchangeRateData, subscribe: multiSubscribe, unsubscribe } = useExchangeRates();
 
     const unsubscribeHandler = () => {
         unsubscribe({ base_currency: "BTC", target_currencies: ["GBP", "ETH"] });
@@ -32,9 +34,10 @@ const WalletsIndexPage = () => {
                 <div>
                     <div>R50: {data1?.tick?.ask}</div>
                     <div>BTC: {data2?.tick?.ask}</div>
-                    <div>{JSON.stringify(data)}</div>
+                    <div>{JSON.stringify(exchangeRateData)}</div>
                 </div>
             )}
+            <div>{JSON.stringify(authorizeData)}</div>
         </div>
     );
 };

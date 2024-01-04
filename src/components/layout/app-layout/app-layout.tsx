@@ -1,9 +1,10 @@
 import { Outlet } from "react-router-dom";
+import AppTopNavBar from "./app-top-navbar";
 
 const AppLayout = () => {
     return (
         <div className="">
-            <h1 className="text-600 font-bold">Wallets</h1>
+            <AppTopNavBar />
             <Outlet />
         </div>
     );

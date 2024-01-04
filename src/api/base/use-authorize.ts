@@ -5,6 +5,7 @@ import useAuthData from "../lib/use-auth-data";
 const useAuthorize = () => {
     const { getActiveAccount } = useAuthData();
     const activeAccount = getActiveAccount();
+
     const { data, ...rest } = useQuery({
         name: "authorize",
         payload: { authorize: activeAccount?.token || "" },

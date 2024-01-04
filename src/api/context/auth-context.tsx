@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useCallback, useEffect, useState } from "react";
 import { LocalStorageUtils, URLUtils } from "../../utils";
 
 type AuthData = {
@@ -8,6 +8,10 @@ type AuthData = {
 };
 
 export const AuthContext = createContext<AuthData | null>(null);
+
+const getActiveLoginid = (loginInfo: URLUtils.AccountInfo[]) => {
+    return loginInfo.find((acc) => /^VR/.test(acc.loginid))?.loginid || loginInfo[0].loginid;
+};
 
 type AuthProviderProps = {
     children: ReactNode;
@@ -19,11 +23,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         LocalStorageUtils.getValue<URLUtils.AccountInfo[]>("client.account_list")
     );
 
-    const switchAccount = (loginid: string) => {
-        if (loginid !== activeLoginid) {
-            setActiveLoginid(loginid);
-        }
-    };
+    const switchAccount = useCallback(
+        (loginid: string) => {
+            if (loginid !== activeLoginid) {
+                setActiveLoginid(loginid);
+                LocalStorageUtils.setValue("client.active_loginid", loginid);
+            }
+        },
+        [activeLoginid]
+    );
 
     const getActiveAccount = () => {
         return accountList?.find((a) => a.loginid === activeLoginid);
@@ -35,8 +43,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             setAccountList(loginInfo);
             LocalStorageUtils.setValue("client.account_list", loginInfo);
             URLUtils.filterSearchParams(paramsToDelete);
+            switchAccount(getActiveLoginid(loginInfo));
         }
-    }, []);
+    }, [switchAccount]);
+
+    useEffect(() => {
+        if (accountList?.length && !activeLoginid) {
+            switchAccount(getActiveLoginid(accountList));
+        }
+    }, [accountList, activeLoginid, switchAccount]);
 
     return (
         <AuthContext.Provider value={{ activeLoginid, switchAccount, getActiveAccount }}>
