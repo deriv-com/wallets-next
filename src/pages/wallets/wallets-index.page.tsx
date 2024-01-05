@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import useExchangeRates from "../../api/base/use-exchange-rates";
-import useSubscription from "../../api/lib/use-subscription";
-import { getOauthURL } from "../../utils/websocket.utils";
-import useAuthorize from "../../api/base/use-authorize";
+import { URLUtils } from "@deriv/utils";
+import { useAuthorize } from "@deriv/api-hooks";
+import { useExchangeRates } from "@deriv/api-hooks";
+import { useSubscription } from "@deriv/api-hooks";
 
 const WalletsIndexPage = () => {
     const { data: authorizeData } = useAuthorize();
@@ -26,7 +26,7 @@ const WalletsIndexPage = () => {
 
     return (
         <div>
-            <a href={getOauthURL()}>Login</a>
+            <a href={URLUtils.getOauthURL()}>Login</a>
             <button onClick={unsubscribeHandler}>Unsubscribe</button>
             {isLoading ? (
                 "Loading"

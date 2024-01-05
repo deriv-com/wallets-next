@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Observable, Subscription } from "rxjs";
 // @ts-expect-error Deriv API is not typed
 import DerivAPI from "@deriv/deriv-api/dist/DerivAPIBasic";
-import { getWebsocketURL } from "../../utils/websocket.utils";
+import { URLUtils } from "@deriv/utils";
 import {
     TSocketEndpointNames,
     TSocketError,
@@ -36,8 +36,8 @@ type APIData = {
 
 export const APIDataContext = createContext<APIData | null>(null);
 
-const APIProvider = ({ children }: PropsWithChildren) => {
-    const derivAPI = useRef<DerivAPI>(new DerivAPI({ connection: new WebSocket(getWebsocketURL()) }));
+export const APIProvider = ({ children }: PropsWithChildren) => {
+    const derivAPI = useRef<DerivAPI>(new DerivAPI({ connection: new WebSocket(URLUtils.getWebsocketURL()) }));
     const subscriptions = useRef<Record<string, Subscription>>();
 
     const send: TSendFunction = (name, payload) => {
@@ -79,5 +79,3 @@ const APIProvider = ({ children }: PropsWithChildren) => {
         </APIDataContext.Provider>
     );
 };
-
-export default APIProvider;

@@ -1,3 +1,6 @@
+import { LocalStorageConstants, ServerContants } from ".";
+import { getActiveLoginid, getAppId, getEnvironmentFromLoginid } from "./websocket.utils";
+
 export type AccountInfo = { loginid: string; currency: string; token: string };
 
 export const getLoginInfoFromURL = () => {
@@ -34,4 +37,25 @@ export const filterSearchParams = (searchParamsToRemove: string[]) => {
 
     const newURL = `${window.location.pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
     window.history.pushState(null, "", newURL);
+};
+
+export const getOauthURL = () => {
+    return `https://oauth.deriv.com/oauth2/authorize?app_id=${getAppId()}&l=EN&brand=deriv`;
+};
+
+export const getWebsocketURL = () => {
+    const serverURL = getServerURL();
+    const appId = getAppId();
+    const language = window.localStorage.getItem(LocalStorageConstants.i18nLanguage);
+    const brand = "deriv";
+
+    return `wss://${serverURL}/websockets/v3?app_id=${appId}&l=${language}&brand=${brand}`;
+};
+
+export const getServerURL = () => {
+    const configServerURL = window.localStorage.getItem(LocalStorageConstants.configServerURL);
+    if (configServerURL) return configServerURL;
+
+    const activeLoginid = getActiveLoginid();
+    return ServerContants.environments[getEnvironmentFromLoginid(activeLoginid)];
 };

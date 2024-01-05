@@ -17,7 +17,7 @@ type AuthProviderProps = {
     children: ReactNode;
 };
 
-const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [activeLoginid, setActiveLoginid] = useState(LocalStorageUtils.getValue("client.active_loginid") ?? "");
     const [accountList, setAccountList] = useState<URLUtils.AccountInfo[] | null>(
         LocalStorageUtils.getValue<URLUtils.AccountInfo[]>("client.account_list")
@@ -59,5 +59,3 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         </AuthContext.Provider>
     );
 };
-
-export default AuthProvider;

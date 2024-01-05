@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import APIProvider from "./api/context/api-context";
-import AuthProvider from "./api/context/auth-context";
+import { APIProvider } from "@deriv/api-hooks";
+import { AuthProvider } from "./api/context/auth-context";
 import "./styles/main.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/config.routes";

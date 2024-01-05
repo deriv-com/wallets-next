@@ -1,13 +1,13 @@
 import { useRef, useState } from "react";
 import { TSocketRequestPayload, TSocketResponseData } from "../types/api.types";
-import useDerivAPI from "../lib/use-deriv-api";
+import { useDerivAPI } from "../lib/use-deriv-api";
 import { CryptoUtils } from "../../utils";
 
 type TCurrencyPayload = NonNullable<TSocketRequestPayload<"exchange_rates">["target_currency"]>;
 type TCurrencyRateData = NonNullable<TSocketResponseData<"exchange_rates">["exchange_rates"]>["rates"];
 type TCurrenyExchangeSubscribeFunction<T> = { base_currency: T; target_currencies: T[] };
 
-const useExchangeRates = <T extends TCurrencyPayload>() => {
+export const useExchangeRates = <T extends TCurrencyPayload>() => {
     const { subscribe: _subscribe, unsubscribe: _unsubscribe } = useDerivAPI();
     const exchangeRatesSubscriptions = useRef<string[]>([]);
     const [data, setData] = useState<Record<TCurrencyPayload, TCurrencyRateData>>();
@@ -50,7 +50,5 @@ const useExchangeRates = <T extends TCurrencyPayload>() => {
         exchangeRatesSubscriptions.current.forEach((s) => _unsubscribe(s));
     };
 
-    return { data, subscribe, unsubscribe };
+    return { data, subscribe, unsubscribe } as const;
 };
-
-export default useExchangeRates;

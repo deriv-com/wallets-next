@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import useQuery from "../lib/use-query";
-import useAuthData from "../lib/use-auth-data";
+import { useQuery } from "../lib/use-query";
+import { useAuthData } from "../lib/use-auth-data";
 
-const useAuthorize = () => {
+export const useAuthorize = () => {
     const { getActiveAccount } = useAuthData();
     const activeAccount = getActiveAccount();
 
@@ -19,5 +19,3 @@ const useAuthorize = () => {
         ...rest,
     };
 };
-
-export default useAuthorize;

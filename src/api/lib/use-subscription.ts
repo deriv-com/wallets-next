@@ -5,7 +5,7 @@ import {
     TSocketResponseData,
     TSocketSubscribableEndpointNames,
 } from "../types/api.types";
-import useDerivAPI from "./use-deriv-api";
+import { useDerivAPI } from "./use-deriv-api";
 
 type TSubscriptionStatus = "idle" | "error" | "active" | "loading";
 

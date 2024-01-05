@@ -11,14 +11,6 @@ export const getEnvironmentFromLoginid = (loginid: string | null) => {
     return "demo";
 };
 
-export const getServerURL = () => {
-    const configServerURL = window.localStorage.getItem(LocalStorageConstants.configServerURL);
-    if (configServerURL) return configServerURL;
-
-    const activeLoginid = getActiveLoginid();
-    return ServerContants.environments[getEnvironmentFromLoginid(activeLoginid)];
-};
-
 export const getAppId = () => {
     if (ServerContants.userAppId) return ServerContants.userAppId;
 
@@ -30,17 +22,4 @@ export const getAppId = () => {
     if (domainAppId) return domainAppId;
 
     return 36300;
-};
-
-export const getWebsocketURL = () => {
-    const serverURL = getServerURL();
-    const appId = getAppId();
-    const language = window.localStorage.getItem(LocalStorageConstants.i18nLanguage);
-    const brand = "deriv";
-
-    return `wss://${serverURL}/websockets/v3?app_id=${appId}&l=${language}&brand=${brand}`;
-};
-
-export const getOauthURL = () => {
-    return `https://oauth.deriv.com/oauth2/authorize?app_id=${getAppId()}&l=EN&brand=deriv`;
 };
