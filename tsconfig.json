@@ -25,6 +25,7 @@
         /* Path Alias */
         "paths": {
             "@deriv/api-hooks": ["./api/index.ts"],
+            "@deriv/quill-icons/*": ["./assets/icons/*"],
             "@deriv/utils": ["./utils/index.ts"]
         }
     },

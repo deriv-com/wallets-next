@@ -1,11 +1,15 @@
 import { Outlet } from "react-router-dom";
 import AppTopNavBar from "./app-top-navbar";
+import { AppBottomNavBar } from "./app-bottom-navbar";
 
 const AppLayout = () => {
     return (
-        <div className="">
+        <div className="relative">
             <AppTopNavBar />
-            <Outlet />
+            <div className="mt-2400">
+                <Outlet />
+            </div>
+            <AppBottomNavBar />
         </div>
     );
 };
